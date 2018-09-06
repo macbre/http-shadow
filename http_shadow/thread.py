@@ -75,6 +75,7 @@ def compare(url, resp_a, resp_b):
     # log to syslog for further processing in elasticsearch / Kibana
     syslog.openlog(ident='http-shadow', logoption=syslog.LOG_PID, facility=syslog.LOG_USER)
     syslog.syslog(json.dumps({
+        'appname': 'http-shadow',  # this will create a separate elasticsearch index
         'is_ok': is_ok,
         'url': url,
         'response_prod': resp_a,
