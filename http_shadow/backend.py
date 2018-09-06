@@ -19,7 +19,7 @@ class Backend(object):
             self._http.proxies = {'http': proxy}
 
         self._http.headers = headers
-        print(headers)
+        # print(headers)
 
     def request(self, url):
         try:
