@@ -73,7 +73,7 @@ def compare(url, resp_a, resp_b):
         # print(resp_b['content_length'] - resp_a['content_length'])
 
     # log to syslog for further processing in elasticsearch / Kibana
-    syslog.openlog(ident='http-shadow', logoption=syslog.LOG_PID, facility=syslog.LOG_USER)
+    syslog.openlog(ident='backend', logoption=syslog.LOG_PID, facility=syslog.LOG_USER)
     syslog.syslog(json.dumps({
         'appname': 'http-shadow',  # this will create a separate elasticsearch index
         'is_ok': is_ok,
