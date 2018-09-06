@@ -1,9 +1,6 @@
-import logging
 from time import sleep
 
 from wikia_common_kibana import Kibana
-
-logging.basicConfig(level=logging.INFO)
 
 
 class AccessLog(object):
@@ -33,7 +30,7 @@ class AccessLog(object):
     # yields URLs found in access log
     def fetch(self):
         while True:
-            res = self.kibana.query_by_string(self.QUERY, fields=self.FIELDS, limit=50)
+            res = self.kibana.query_by_string(self.QUERY, fields=self.FIELDS, limit=self.BATCH)
             urls = map(self.format_log_entry, res)
 
             for url in urls:
