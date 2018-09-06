@@ -1,4 +1,4 @@
-from time import sleep
+import time
 
 from wikia_common_kibana import Kibana
 
@@ -6,7 +6,7 @@ from wikia_common_kibana import Kibana
 class AccessLog(object):
 
     # how often to query elasticsearch for new access log entries
-    INTERVAL = 5
+    INTERVAL = 10
 
     # query to use when taking URLs from access log
     QUERY = 'verb: "GET"'
@@ -15,7 +15,7 @@ class AccessLog(object):
     FIELDS = ['hostname', 'request']
 
     # how many URLs to fetch
-    BATCH = 150
+    BATCH = 250
 
     def __init__(self):
         self.kibana = Kibana(
@@ -30,13 +30,17 @@ class AccessLog(object):
     # yields URLs found in access log
     def fetch(self):
         while True:
+            now = int(time.time())
+            self.kibana._since = now - self.INTERVAL + 1
+            self.kibana._to = now
+
             res = self.kibana.query_by_string(self.QUERY, fields=self.FIELDS, limit=self.BATCH)
             urls = map(self.format_log_entry, res)
 
             for url in urls:
                 yield url
 
-            sleep(self.INTERVAL)
+            time.sleep(self.INTERVAL)
 
 
 def main():
