@@ -33,6 +33,6 @@ class Backend(object):
             'status_code': resp.status_code,
             'location': resp.headers.get('Location'),
             # 'content_length': int(resp.headers.get('Content-Length')),
-            'content_type': resp.headers.get('Content-Type'),
+            'content_type': resp.headers.get('Content-Type', '').lower(),
             'surrogate_key': resp.headers.get('Surrogate-Key'),
         }
