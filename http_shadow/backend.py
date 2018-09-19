@@ -32,7 +32,7 @@ class Backend(object):
         return {
             'status_code': resp.status_code,
             'location': resp.headers.get('Location'),
-            # 'content_length': int(resp.headers.get('Content-Length')),
+            'cache_control': resp.headers.get('Cache-Control'),
             'content_type': resp.headers.get('Content-Type', '').lower(),
             'surrogate_key': resp.headers.get('Surrogate-Key'),
         }
