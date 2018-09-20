@@ -64,7 +64,7 @@ class Worker(Thread):
 
 
 def compare(url, resp_a, resp_b):
-    is_ok = resp_a == resp_b
+    is_ok = resp_a['response'] == resp_b['response']
 
     if is_ok:
         print('OK <{}>'.format(url))
@@ -78,7 +78,7 @@ def compare(url, resp_a, resp_b):
         'appname': 'http-shadow',  # this will create a separate elasticsearch index
         'is_ok': is_ok,
         'url': url,
-        'response_prod': resp_a,
-        'response_kube': resp_b,
+        'apache': resp_a,
+        'kube': resp_b,
     }))
     syslog.closelog()

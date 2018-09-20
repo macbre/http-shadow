@@ -23,16 +23,21 @@ class Backend(object):
 
     def request(self, url):
         try:
-            resp = self._http.get(url)
+            resp = self._http.get(url, allow_redirects=False)
         except RequestException as ex:
             return {
                 'exception': str(ex)
             }
 
         return {
-            'status_code': resp.status_code,
-            'location': resp.headers.get('Location'),
-            'cache_control': resp.headers.get('Cache-Control'),
-            'content_type': resp.headers.get('Content-Type', '').lower(),
-            'surrogate_key': resp.headers.get('Surrogate-Key'),
+            'response': {
+                'status_code': resp.status_code,
+                'location': resp.headers.get('Location'),
+                'cache_control': resp.headers.get('Cache-Control'),
+                'content_type': resp.headers.get('Content-Type', '').lower(),
+                'surrogate_key': resp.headers.get('Surrogate-Key'),
+            },
+            'info': {
+                'x_served_by': resp.headers.get('X-Served-By'),
+            }
         }
