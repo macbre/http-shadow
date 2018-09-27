@@ -12,3 +12,8 @@ get_urls | check_urls
 ```
 
 This will pipe URLs found in Apache access log to the process that will perform two requests: to Apache and to Kubernetes. Response code and headers will be compared and results logged via syslog with `http-shadow` ident. 
+
+4. To compare two sandboxes use:
+```
+get_urls | check_urls <apache-based sandbox> <k8s-based sandbox>
+```
