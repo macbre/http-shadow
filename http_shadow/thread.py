@@ -4,7 +4,7 @@ import syslog
 import re
 
 from threading import Thread
-from queue import Queue
+from multiprocessing import Queue
 
 from http_shadow import Backend
 
@@ -62,9 +62,9 @@ class Worker(Thread):
             if 'surrogate_key' in resp_apache['response']: del resp_apache['response']['surrogate_key']
             if 'surrogate_key' in resp_kube['response']: del resp_kube['response']['surrogate_key']
 
-            if 'location' in resp_apache['response']:
+            if 'location' in resp_apache['response'] and resp_apache['response']['location'] is not None:
                 resp_apache['response']['location'] = resp_apache['response']['location'].replace(self._apache_host, GENERIC_SANDBOX)
-            if 'location' in resp_kube['response']:
+            if 'location' in resp_kube['response'] and resp_kube['response']['location'] is not None:
                 resp_kube['response']['location'] = resp_kube['response']['location'].replace(self._k8s_host, GENERIC_SANDBOX)
 
         compare(url, resp_apache, resp_kube)
