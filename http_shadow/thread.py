@@ -4,7 +4,7 @@ import syslog
 import re
 
 from threading import Thread
-from multiprocessing import Queue
+from queue import Queue
 
 from http_shadow import Backend
 
