@@ -1,3 +1,5 @@
+import logging
+import re
 import time
 
 from wikia_common_kibana import Kibana
@@ -24,8 +26,16 @@ class AccessLog(object):
     def format_log_entry(entry):
         return 'http://{hostname}{request}'.format(**entry)
 
+    @staticmethod
+    def filter_out(url):
+        # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
+        return re.match(
+            url, '#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#') is not None
+
     # yields URLs found in access log
     def fetch(self):
+        logger = logging.getLogger(__name__)
+
         while True:
             es = Kibana(
                 period=self.INTERVAL,
@@ -36,6 +46,10 @@ class AccessLog(object):
             urls = map(self.format_log_entry, res)
 
             for url in urls:
+                if self.filter_out(url):
+                    logger.info('Filtered out <%s>', url)
+                    continue
+
                 yield url
 
             time.sleep(self.INTERVAL)
