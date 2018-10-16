@@ -30,7 +30,7 @@ class AccessLog(object):
     def filter_out(url):
         # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
         return re.match(
-            url, '#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#') is not None
+            r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url) is not None
 
     # yields URLs found in access log
     def fetch(self):
