@@ -47,7 +47,7 @@ class Worker(Thread):
         self._is_sandbox = len(apache_host) > 0 and len(k8s_host) > 0
 
         # set up backends
-        k8s_headers = {'X-Mw-Kubernetes': '1'} if self._is_sandbox else {}
+        k8s_headers = {'X-Mw-Kubernetes': '1'}
         self._prod = Backend(proxy=HTTP_PROXY)
         self._kube = Backend(headers=k8s_headers, proxy=HTTP_PROXY)
 
