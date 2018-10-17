@@ -29,8 +29,16 @@ class AccessLog(object):
     @staticmethod
     def filter_out(url):
         # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
-        return re.match(
-            r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url) is not None
+        if re.match(
+            r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url
+        ) is not None:
+            return True
+
+        # SUS-6050 | filter out /load.php requests with varying cache control
+        if 'mediawiki.language.data' in url:
+            return True
+
+        return False
 
     # yields URLs found in access log
     def fetch(self):
