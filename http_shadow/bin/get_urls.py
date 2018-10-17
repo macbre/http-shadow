@@ -42,8 +42,8 @@ class AccessLog(object):
         if '/Special:Random' in url:
             return True
 
-        # Special:UserLogin makes redirects with a random cb value added
-        if '/Special:UserLogin' in url:
+        # Special:UserLogin and Special:UserSignup make redirects with a random cb value added
+        if '/Special:UserLogin' in url or '/Special:UserSignup' in url:
             return True
 
         return False
