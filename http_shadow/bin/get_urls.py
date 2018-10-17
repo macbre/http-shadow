@@ -38,6 +38,10 @@ class AccessLog(object):
         if 'mediawiki.language.data' in url:
             return True
 
+        # Special:Random will give us different redirects by design
+        if '/Special:Random' in url:
+            return True
+
         return False
 
     # yields URLs found in access log
