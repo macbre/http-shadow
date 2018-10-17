@@ -46,6 +46,10 @@ class AccessLog(object):
         if '/Special:UserLogin' in url or '/Special:UserSignup' in url:
             return True
 
+        # SUS-5885 | ignore c: cross-wiki links // e.g. http://community.wikia.com/wiki/c:pl.mitologia
+        if url.startswith('/c:'):
+            return True
+
         return False
 
     # yields URLs found in access log
