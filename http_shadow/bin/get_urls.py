@@ -20,7 +20,7 @@ class AccessLog(object):
     FIELDS = ['hostname', 'request']
 
     # how many URLs to fetch
-    BATCH = 1500
+    BATCH = 2500
 
     @staticmethod
     def format_log_entry(entry):
