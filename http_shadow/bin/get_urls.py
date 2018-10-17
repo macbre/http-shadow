@@ -28,6 +28,10 @@ class AccessLog(object):
 
     @staticmethod
     def filter_out(url):
+        """
+        :type url str
+        :rtype: bool
+        """
         # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
         if re.match(
             r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url
