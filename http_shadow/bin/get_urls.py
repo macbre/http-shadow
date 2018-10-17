@@ -35,7 +35,7 @@ class AccessLog(object):
             return True
 
         # SUS-6050 | filter out /load.php requests with varying cache control
-        if 'mediawiki.language.data' in url:
+        if '/load.php' in url and 'version=' in url:
             return True
 
         # Special:Random will give us different redirects by design
