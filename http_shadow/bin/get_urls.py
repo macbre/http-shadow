@@ -33,7 +33,7 @@ class AccessLog(object):
         :rtype: bool
         """
         # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
-        if re.match(
+        if re.search(
             r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url
         ) is not None:
             return True
@@ -53,7 +53,7 @@ class AccessLog(object):
         # SUS-5885 | ignore c: cross-wiki links
         # e.g. http://community.wikia.com/wiki/c:pl.mitologia
         # or http://community.wikia.com/wiki/C:marvel:Joseph_Ledger_(Earth-31916)
-        if url.lower().startswith('/c:') or url.lower().startswith('/wiki/c:'):
+        if '/c:' in url.lower() or '/wiki/c:' in url.lower():
             return True
 
         return False
