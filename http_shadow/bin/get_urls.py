@@ -50,8 +50,10 @@ class AccessLog(object):
         if '/Special:UserLogin' in url or '/Special:UserSignup' in url:
             return True
 
-        # SUS-5885 | ignore c: cross-wiki links // e.g. http://community.wikia.com/wiki/c:pl.mitologia
-        if url.startswith('/c:'):
+        # SUS-5885 | ignore c: cross-wiki links
+        # e.g. http://community.wikia.com/wiki/c:pl.mitologia
+        # or http://community.wikia.com/wiki/C:marvel:Joseph_Ledger_(Earth-31916)
+        if url.lower().startswith('/c:') or url.lower().startswith('/wiki/c:'):
             return True
 
         return False
