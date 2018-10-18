@@ -17,3 +17,7 @@ This will pipe URLs found in Apache access log to the process that will perform 
 ```
 get_urls | check_urls <apache-based sandbox> <k8s-based sandbox>
 ```
+
+### Tests
+
+Run `py.test`.

@@ -32,9 +32,9 @@ class AccessLog(object):
         :type url str
         :rtype: bool
         """
-        # filter out all URLs that are not allowed to be accessed by web-server configuration configuration
+        # filter out all URLs that are not allowed to be accessed by web-server configuration
         if re.search(
-            r'#/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/#', url
+            r'/(lib|serialized|tests|mw-config|includes|cache|maintenance|languages|config)/', url
         ) is not None:
             return True
 

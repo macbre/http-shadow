@@ -8,6 +8,7 @@ setup(
     author='macbre',
     author_email='macbre@wikia-inc.com',
     install_requires=[
+        'pytest==3.6.3',
         'requests==2.19.1',
         'wikia-common-kibana==2.2.5',
     ],
