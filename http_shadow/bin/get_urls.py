@@ -56,6 +56,10 @@ class AccessLog(object):
         if '/c:' in url.lower() or '/wiki/c:' in url.lower():
             return True
 
+        # SUS-6067 | do not shadow HTTP requests used to block and ban chat users
+        if 'method=blockOrBanChat' in url:
+            return True
+
         return False
 
     # yields URLs found in access log
