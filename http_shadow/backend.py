@@ -1,3 +1,4 @@
+import logging
 import requests
 
 from requests.exceptions import RequestException
@@ -8,6 +9,7 @@ class Backend(object):
     USER_AGENT = 'http-shadow/0.1 (+https://github.com/macbre/http-shadow)'
 
     def __init__(self, headers=None, proxy=None):
+        self._logger = logging.getLogger(self.__class__.__name__)
         self._http = requests.session()
 
         # set request headers (including user agent)
@@ -19,7 +21,8 @@ class Backend(object):
             self._http.proxies = {'http': proxy}
 
         self._http.headers = headers
-        # print(headers)
+
+        self._logger.info('HTTP client: proxy %s, headers: %s', proxy, headers)
 
     def request(self, url):
         try:
