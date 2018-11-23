@@ -8,7 +8,7 @@ from wikia_common_kibana import Kibana
 class AccessLog(object):
 
     # how often to query elasticsearch for new access log entries
-    INTERVAL = 5
+    INTERVAL = 10
 
     # elasticsearch index with access log
     ES_INDEX = 'logstash-apache-access-log'
@@ -20,7 +20,7 @@ class AccessLog(object):
     FIELDS = ['hostname', 'request']
 
     # how many URLs to fetch
-    BATCH = 2500
+    BATCH = 5000
 
     @staticmethod
     def format_log_entry(entry):

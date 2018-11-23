@@ -7,7 +7,7 @@ def main():
     # set up workers - make HTTP requests in parallel
     apache_host = argv[1] if len(argv) >= 2 else ''
     k8s_host = argv[2] if len(argv) >= 3 else ''
-    workers = HttpPool(threads=50, apache_host=apache_host, k8s_host=k8s_host)
+    workers = HttpPool(threads=250, apache_host=apache_host, k8s_host=k8s_host)
 
     # read URLs from stdin
     for line in stdin:
