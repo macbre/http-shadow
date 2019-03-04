@@ -18,6 +18,44 @@ This will pipe URLs found in Apache access log to the process that will perform 
 get_urls | check_urls <apache-based sandbox> <k8s-based sandbox>
 ```
 
+### Log entry example
+
+```
+Mar  4 20:55:32 debian backend[11046]: {"appname": "http-shadow", "is_ok": true, "url": "http://logosfake.wikia.com/wiki/Syco_Technologies", "apache": {"response": {"status_code": 301, "location": "http://logosfake.fandom.com/wiki/Syco_Technologies", "cache_control": "s-maxage=1200, must-revalidate, max-age=0", "content_type": "text/html; charset=utf-8", "surrogate_key": "wiki-798185 wiki-798185-mediawiki"}, "info": {"x_served_by": "ap-s265"}}, "kube": {"response": {"status_code": 301, "location": "http://logosfake.fandom.com/wiki/Syco_Technologies", "cache_control": "s-maxage=1200, must-revalidate, max-age=0", "content_type": "text/html; charset=utf-8", "surrogate_key": "wiki-798185 wiki-798185-mediawiki"}, "info": {"x_served_by": "mediawiki-prod-6db7584985-rl8k5"}}}
+```
+
+```json
+{
+  "appname": "http-shadow",
+  "is_ok": true,
+  "url": "http://logosfake.wikia.com/wiki/Syco_Technologies",
+  "apache": {
+    "response": {
+      "status_code": 301,
+      "location": "http://logosfake.fandom.com/wiki/Syco_Technologies",
+      "cache_control": "s-maxage=1200, must-revalidate, max-age=0",
+      "content_type": "text/html; charset=utf-8",
+      "surrogate_key": "wiki-798185 wiki-798185-mediawiki"
+    },
+    "info": {
+      "x_served_by": "ap-s265"
+    }
+  },
+  "kube": {
+    "response": {
+      "status_code": 301,
+      "location": "http://logosfake.fandom.com/wiki/Syco_Technologies",
+      "cache_control": "s-maxage=1200, must-revalidate, max-age=0",
+      "content_type": "text/html; charset=utf-8",
+      "surrogate_key": "wiki-798185 wiki-798185-mediawiki"
+    },
+    "info": {
+      "x_served_by": "mediawiki-prod-6db7584985-rl8k5"
+    }
+  }
+}
+```
+
 ### Tests
 
 Run `py.test`.
