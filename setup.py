@@ -8,9 +8,9 @@ setup(
     author='macbre',
     author_email='macbre@wikia-inc.com',
     install_requires=[
-        'pytest==3.6.3',
-        'requests==2.19.1',
-        'wikia-common-kibana==2.2.5',
+        'pytest==4.3.0',
+        'requests==2.21.0',
+        'elasticsearch-query==2.4.0',
     ],
     include_package_data=True,
     entry_points={

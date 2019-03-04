@@ -2,7 +2,7 @@ import logging
 import re
 import time
 
-from wikia_common_kibana import Kibana
+from elasticsearch_query import ElasticsearchQuery
 
 
 class AccessLog(object):
@@ -12,6 +12,8 @@ class AccessLog(object):
 
     # elasticsearch index with access log
     ES_INDEX = 'logstash-apache-access-log'
+
+    ELASTICSEARCH_HOST = 'logs-prod.es.service.sjc.consul'  # ES5
 
     # query to use when taking URLs from access log
     QUERY = 'verb: "GET"'
@@ -67,7 +69,8 @@ class AccessLog(object):
         logger = logging.getLogger(__name__)
 
         while True:
-            es = Kibana(
+            es = ElasticsearchQuery(
+                es_host=self.ELASTICSEARCH_HOST,
                 period=self.INTERVAL,
                 index_prefix=self.ES_INDEX
             )
