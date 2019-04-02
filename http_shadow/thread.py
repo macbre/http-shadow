@@ -14,12 +14,16 @@ GENERIC_SANDBOX = 'sandbox'
 
 
 class HttpPool(object):
-    def __init__(self, threads=5, apache_host='', k8s_host=''):
+    def __init__(self, threads: int = 5, k8s_sandbox: str = None):
+        """
+        :type threads int
+        :type k8s_sandbox str
+        """
         self._queue = Queue(maxsize=0)
         self._workers = []
 
         for _ in range(threads):
-            worker = Worker(self._queue, apache_host, k8s_host)
+            worker = Worker(self._queue, k8s_sandbox=k8s_sandbox)
 
             worker.daemon = True
             worker.start()
@@ -35,16 +39,19 @@ class HttpPool(object):
 
 
 class Worker(Thread):
-    def __init__(self, queue, apache_host, k8s_host):
+    def __init__(self, queue, k8s_sandbox=None):
         """
         :type queue Queue
+        :type k8s_sandbox str
         """
         super(Worker, self).__init__()
         self._queue = queue
-        self._apache_host = apache_host
-        self._k8s_host = k8s_host
+        self._k8s_sandbox = k8s_sandbox
         self._logger = logging.getLogger(self.name)
-        self._is_sandbox = len(apache_host) > 0 and len(k8s_host) > 0
+        self._is_sandbox = k8s_sandbox is not None
+
+        if self._is_sandbox:
+            self._logger.info('Using %s k8s-powered sandbox', self._k8s_sandbox)
 
         # set up backends
         k8s_headers = {'X-Mw-Kubernetes': '1'}
@@ -54,8 +61,8 @@ class Worker(Thread):
     def do_request(self, url):
         self._logger.info(url)
 
-        resp_apache = self._prod.request(self.add_subdomain(url, self._apache_host) if self._is_sandbox else url)
-        resp_kube = self._kube.request(self.add_subdomain(url, self._k8s_host) if self._is_sandbox else url)
+        resp_apache = self._prod.request(url)
+        resp_kube = self._kube.request(self.add_subdomain(url, self._k8s_sandbox) if self._is_sandbox else url)
 
         if self._is_sandbox:
             # these are always different
@@ -63,9 +70,9 @@ class Worker(Thread):
             if 'surrogate_key' in resp_kube['response']: del resp_kube['response']['surrogate_key']
 
             if 'location' in resp_apache['response'] and resp_apache['response']['location'] is not None:
-                resp_apache['response']['location'] = resp_apache['response']['location'].replace(self._apache_host, GENERIC_SANDBOX)
+                resp_apache['response']['location'] = resp_apache['response']['location']
             if 'location' in resp_kube['response'] and resp_kube['response']['location'] is not None:
-                resp_kube['response']['location'] = resp_kube['response']['location'].replace(self._k8s_host, GENERIC_SANDBOX)
+                resp_kube['response']['location'] = resp_kube['response']['location']
 
         compare(url, resp_apache, resp_kube)
 
@@ -74,7 +81,8 @@ class Worker(Thread):
             self.do_request(self._queue.get())
             self._queue.task_done()
 
-    def add_subdomain(self, url, subdomain):
+    @staticmethod
+    def add_subdomain(url, subdomain):
         # prepend wikia.com with <subdomain>.
         return re.sub(r'((wikia|fandom).com)', subdomain + r'.\1', url)
 

@@ -5,9 +5,8 @@ from http_shadow import HttpPool
 
 def main():
     # set up workers - make HTTP requests in parallel
-    apache_host = argv[1] if len(argv) >= 2 else ''
-    k8s_host = argv[2] if len(argv) >= 3 else ''
-    workers = HttpPool(threads=250, apache_host=apache_host, k8s_host=k8s_host)
+    k8s_sandbox = argv[1] if len(argv) >= 2 else None
+    workers = HttpPool(threads=250, k8s_sandbox=k8s_sandbox)
 
     # read URLs from stdin
     for line in stdin:
