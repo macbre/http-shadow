@@ -8,7 +8,7 @@ setup(
     author='macbre',
     author_email='macbre@wikia-inc.com',
     install_requires=[
-        'pytest==4.3.0',
+        #'pytest==4.3.0',
         'requests==2.21.0',
         'elasticsearch-query==2.4.0',
     ],

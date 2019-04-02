@@ -42,5 +42,6 @@ class Backend(object):
             },
             'info': {
                 'x_served_by': resp.headers.get('X-Served-By'),
+                'x_response_time': float(resp.headers.get('X-Backend-Response-Time', 0)),
             }
         }
