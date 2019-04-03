@@ -9,8 +9,6 @@ from queue import Queue
 from http_shadow import Backend
 
 HTTP_PROXY = 'border.service.sjc.consul:80'
-# used for comparing redirect locations on different sandboxes
-GENERIC_SANDBOX = 'sandbox'
 
 
 class HttpPool(object):
@@ -66,8 +64,10 @@ class Worker(Thread):
 
         if self._is_sandbox:
             # these are always different
-            if 'surrogate_key' in resp_apache['response']: del resp_apache['response']['surrogate_key']
-            if 'surrogate_key' in resp_kube['response']: del resp_kube['response']['surrogate_key']
+            if 'surrogate_key' in resp_apache['response']:
+                del resp_apache['response']['surrogate_key']
+            if 'surrogate_key' in resp_kube['response']:
+                del resp_kube['response']['surrogate_key']
 
             if 'location' in resp_apache['response'] and resp_apache['response']['location'] is not None:
                 resp_apache['response']['location'] = resp_apache['response']['location']
