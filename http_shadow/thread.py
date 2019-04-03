@@ -87,11 +87,19 @@ class Worker(Thread):
         return re.sub(r'((wikia|fandom).com)', subdomain + r'.\1', url)
 
 
+logpath = "/tmp/k8s-times.log"
+logger = logging.getLogger('log')
+logger.setLevel(logging.INFO)
+ch = logging.FileHandler(logpath)
+ch.setFormatter(logging.Formatter('%(message)s'))
+logger.addHandler(ch)
+
+
 def compare(url, resp_apache, resp_kube):
     is_ok = resp_apache['response'] == resp_kube['response']
 
     if is_ok:
-        print('OK <{}>'.format(url))
+        print('OK {} <{}>'.format(resp_apache['response']['status_code'], url))
     else:
         print('ERROR: <{}> {} {}'.format(url, resp_apache, resp_kube))
         # print(resp_kube['content_length'] - resp_apache['content_length'])
@@ -110,6 +118,4 @@ def compare(url, resp_apache, resp_kube):
     # log kubernetes times for 200 responses
     # Lyrics API returns no X-Response-Time response header (hence the check below)
     if resp_kube['response']['status_code'] == 200 and resp_kube['info']['x_response_time'] > 0:
-        syslog.openlog(ident='k8s-response', logoption=syslog.LOG_PID, facility=syslog.LOG_USER)
-        syslog.syslog(str(resp_kube['info']['x_response_time']))
-        syslog.closelog()
+        logger.info(str(resp_kube['info']['x_response_time']))
