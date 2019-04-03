@@ -108,7 +108,8 @@ def compare(url, resp_apache, resp_kube):
     syslog.closelog()
 
     # log kubernetes times for 200 responses
-    if resp_kube['response']['status_code'] == 200:
+    # Lyrics API returns no X-Response-Time response header (hence the check below)
+    if resp_kube['response']['status_code'] == 200 and resp_kube['info']['x_response_time'] > 0:
         syslog.openlog(ident='k8s-response', logoption=syslog.LOG_PID, facility=syslog.LOG_USER)
         syslog.syslog(str(resp_kube['info']['x_response_time']))
         syslog.closelog()
