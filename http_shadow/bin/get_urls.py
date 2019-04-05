@@ -16,7 +16,8 @@ class AccessLog(object):
     ELASTICSEARCH_HOST = 'logs-prod.es.service.sjc.consul'  # ES5
 
     # query to use when taking URLs from access log
-    QUERY = 'verb: "GET"'
+    # QUERY = 'verb: "GET"'
+    QUERY = 'verb: "GET" AND (hostname: "wikia.com" OR hostname: "wikia.org")'
 
     # which fields to fetch
     FIELDS = ['hostname', 'request']
