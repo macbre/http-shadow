@@ -8,7 +8,8 @@ from queue import Queue
 
 from http_shadow import Backend
 
-HTTP_PROXY = 'border.service.sjc.consul:80'
+# HTTP_PROXY = 'border.service.sjc.consul:80'
+HTTP_PROXY = 'prod.icache.service.sjc.consul:80'
 
 
 class HttpPool(object):
