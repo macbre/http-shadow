@@ -8,8 +8,9 @@ from queue import Queue
 
 from http_shadow import Backend
 
-# HTTP_PROXY = 'border.service.sjc.consul:80'
-HTTP_PROXY = 'prod.icache.service.sjc.consul:80'
+HTTP_PROXY = 'border.service.sjc.consul:80'
+APACHE = 'ap-s200:80'
+# HTTP_PROXY = 'prod.icache.service.sjc.consul:80'
 
 
 class HttpPool(object):
@@ -54,7 +55,7 @@ class Worker(Thread):
 
         # set up backends
         k8s_headers = {'X-Mw-Kubernetes': '1'}
-        self._prod = Backend(proxy=HTTP_PROXY)
+        self._prod = Backend(proxy=APACHE)
         self._kube = Backend(headers=k8s_headers, proxy=HTTP_PROXY)
 
     def do_request(self, url):
@@ -88,7 +89,7 @@ class Worker(Thread):
         return re.sub(r'((wikia|fandom).com)', subdomain + r'.\1', url)
 
 
-logpath = "/tmp/k8s-times.log"
+logpath = "/tmp/compare-times.csv"
 logger = logging.getLogger('log')
 logger.setLevel(logging.INFO)
 ch = logging.FileHandler(logpath)
@@ -116,9 +117,12 @@ def compare(url, resp_apache, resp_kube):
     }))
     syslog.closelog()
 
-    pass
+    # pass
 
     # log kubernetes times for 200 responses
     # Lyrics API returns no X-Response-Time response header (hence the check below)
     if resp_kube['response']['status_code'] == 200 and resp_kube['info']['x_response_time'] > 0:
-        logger.info(str(resp_kube['info']['x_response_time']))
+        logger.info('%s\t%s\t%s',
+                    str(url),
+                    str(resp_apache['info']['x_response_time']),
+                    str(resp_kube['info']['x_response_time']))
