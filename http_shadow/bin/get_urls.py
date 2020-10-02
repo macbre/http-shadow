@@ -11,22 +11,22 @@ class AccessLog(object):
     INTERVAL = 10
 
     # elasticsearch index with access log
-    ES_INDEX = 'logstash-apache-access-log'
+    ES_INDEX = 'logstash-mediawiki-nginx-access-logs'
 
     ELASTICSEARCH_HOST = 'logs-prod.es.service.sjc.consul'  # ES5
 
     # query to use when taking URLs from access log
-    QUERY = 'verb: "GET"'
+    QUERY = 'method: "GET" AND app_slot: "slot1" AND status: "200"'
 
     # which fields to fetch
-    FIELDS = ['hostname', 'request']
+    FIELDS = ['http_host', 'request']
 
     # how many URLs to fetch
     BATCH = 5000
 
     @staticmethod
     def format_log_entry(entry):
-        return 'http://{hostname}{request}'.format(**entry)
+        return 'http://{http_host}{request}'.format(**entry)
 
     @staticmethod
     def filter_out(url):
@@ -42,6 +42,12 @@ class AccessLog(object):
 
         # SUS-6050 | filter out /load.php requests with varying cache control
         if '/load.php' in url and 'version=' in url:
+            return True
+
+        if 'http:///' in url:
+            return True
+
+        if 'wikia.com' in url:
             return True
 
         # Special:Random will give us different redirects by design
@@ -74,7 +80,6 @@ class AccessLog(object):
                 period=self.INTERVAL,
                 index_prefix=self.ES_INDEX
             )
-
             res = es.query_by_string(self.QUERY, fields=self.FIELDS, limit=self.BATCH)
             urls = map(self.format_log_entry, res)
 
